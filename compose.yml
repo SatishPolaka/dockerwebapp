@@ -1,26 +1,25 @@
-version: "3.9"
-
 services:
-  devopsdb:
-    image: shaikmustafa/deepika:db
+  myapplication:
+    container_name: app-cont
+    image: appimage
     ports:
-      - "3306:3306"
-    deploy:
-      replicas: 1
-    networks:
-      - mynetwork
-
-  application:
-    image: shaikmustafa/deepika:app
-    ports:
-      - "1111:8080"
-    deploy:
-      replicas: 3
+      - "1115:8080"
     depends_on:
       - devopsdb
-    networks:
-      - mynetwork
 
-networks:
-  mynetwork:
-    driver: overlay
+
+
+  devopsdb:
+    container_name: devopsdb
+    image: dbimage
+    ports:
+      - "1112:3306"
+    volumes:
+      - userdata:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: "devopspassword"
+
+
+
+volumes:
+  userdata:
