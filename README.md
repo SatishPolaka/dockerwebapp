@@ -1,4 +1,3 @@
-````markdown
 # 🚀 End-to-End Jenkins CI/CD Pipeline with Docker
 
 ## 📌 Project Overview
