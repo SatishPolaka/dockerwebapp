@@ -1,25 +1,21 @@
 services:
   myapplication:
     container_name: app-cont
-    image: appimage
+    image: mywebapp:v1
     ports:
       - "1111:8080"
     depends_on:
       - devopsdb
 
-
-
   devopsdb:
     container_name: devopsdb
-    image: dbimage
+    image: mydb:v1
     ports:
       - "1112:3306"
     volumes:
       - userdata:/var/lib/mysql/
     environment:
       MYSQL_ROOT_PASSWORD: "devopspassword"
-
-
 
 volumes:
   userdata:
