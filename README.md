@@ -1,14 +1,3 @@
-Ah, yes — I understand now.
-
-You mean: **you want to give someone your GitHub repository so they can clone it and run the complete project themselves.** So the README should be written like a **proper setup/run guide**, not just a project description.
-
-In that case, the README should tell them exactly:
-
-**Clone → Prerequisites → Configure → Build → Run → Verify → Jenkins pipeline**
-
-I would make it like this:
-
-````markdown
 # Jenkins CI/CD Docker Web Application
 
 ## Project Overview
