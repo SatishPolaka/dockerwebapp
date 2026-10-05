@@ -3,7 +3,7 @@ services:
     container_name: app-cont
     image: appimage
     ports:
-      - "1115:8080"
+      - "1111:8080"
     depends_on:
       - devopsdb
 
