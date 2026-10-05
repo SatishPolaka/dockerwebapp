@@ -1,0 +1,103 @@
+pipeline {
+
+    agent any
+
+    tools {
+        maven 'maven'
+    }
+
+    stages {
+
+        stage('CODE') {
+            steps {
+                git 'https://github.com/SatishPolaka/dockerwebapp.git'
+            }
+        }
+
+        stage('BUILD') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('SQA') {
+            steps {
+                withSonarQubeEnv('mysonar') {
+                    sh '''
+                        mvn clean verify \
+                            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                            -Dsonar.projectKey=my-project_test \
+                            -Dsonar.projectName='my-project_test' \
+                            -Dsonar.host.url=http://<SONARQUBE-IP>:9000 \
+                            -Dsonar.token=$SONAR_AUTH_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('QUALITY GATE') {
+            steps {
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar'
+            }
+        }
+
+        stage('ARTIFACT') {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: '<NEXUS-IP>:8081',
+                    groupId: 'com.visualpathit',
+                    version: 'v2',
+                    repository: 'dockerapp',
+                    credentialsId: 'nexus',
+                    artifacts: [
+                        [
+                            artifactId: 'vprofile',
+                            classifier: '',
+                            file: 'target/vprofile-v2.war',
+                            type: 'war'
+                        ]
+                    ]
+                )
+            }
+        }
+
+        stage('IMAGES') {
+            steps {
+                sh '''
+                    docker build -t mywebapp:v1 -f Docker-app/Dockerfile .
+                    docker build -t mydb:v1 ./Docker-db
+                '''
+            }
+        }
+
+        stage('TRIVY SCAN') {
+            steps {
+                sh '''
+                    trivy image mywebapp:v1
+                    trivy image mydb:v1
+                '''
+            }
+        }
+
+        stage('DEPLOY') {
+            steps {
+                sh '''
+                    docker-compose down || true
+                    docker-compose up -d
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD Pipeline completed successfully.'
+        }
+
+        failure {
+            echo 'CI/CD Pipeline failed. Please check the Jenkins console output.'
+        }
+    }
+}
