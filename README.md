@@ -1,7 +1,3 @@
-Absolutely. Below is the **complete README.md** in a more detailed and professional format, but I have kept the English **simple, natural and close to your way of explaining**.
-
-You can directly use this as your GitHub `README.md`.
-
 ````markdown
 # 🚀 End-to-End Jenkins CI/CD Pipeline with Docker
 
