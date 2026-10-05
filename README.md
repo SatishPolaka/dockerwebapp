@@ -484,14 +484,3 @@ The complete application can then be accessed through:
 ```text
 http://<EC2-PUBLIC-IP>:1111
 ```
-
----
-
-## Author
-
-**Satish Polaka**
-
-AWS | DevOps | Jenkins | Docker | Kubernetes | Terraform | Ansible | Linux
-
-That's a much more professional GitHub structure.
-```
